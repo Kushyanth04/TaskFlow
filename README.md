@@ -1,47 +1,38 @@
 # TaskFlow 🚀
 
-A real-time, full-stack project management application built with **NestJS, React, TypeScript, MongoDB, and PostgreSQL**. 
+Hey! This is **TaskFlow**, a project management tool I built to make tracking work actually feel intuitive. Unlike basic to-do apps, this one handles real-time updates and tracks exactly how long you spend on every task through automated sub-sessions.
 
-TaskFlow has been designed to replace static "To-Do" lists with interactive **automatic time tracking**, native sub-sessions, and seamless drag-and-drop mechanics.
-
----
-
-## 🏗️ Architecture Stack
-
-- **PostgreSQL**: Used for Authentication and Workspace structures natively scaling relational data.
-- **MongoDB**: Used for high-volume flexible document storage mapped strictly for Boards, Tasks, and Comments.
-- **Redis (Bull Queue)**: Orchestrating background async processing for notifications.
-- **WebSockets (Socket.io)**: Broadcasting board and task modifications so everyone sees updates immediately.
-- **React 18 + TailwindCSS**: Modern, dynamic frontend with intuitive hover states and strict UX/UI logic.
+I built this using a modern stack: **NestJS, React, TypeScript, MongoDB, and PostgreSQL**.
 
 ---
 
-## 🔥 Unique Interactive Features (V4)
-
-- **Interactive Time Telemetry**: Simply dragging a task from "To Do" to "In Progress" begins a live visual stopwatch.
-- **Session History & Pausing**: Take breaks by clicking the "Pause" button on your active task cards. It tracks Multi-Session lifecycles autonomously, compiling explicit timestamp offsets natively mapping direct Start/End durations into the task's properties available in the Modal.
-- **Dynamic Kanban Borders**: 
-  - 🟥 **Red**: Currently active and tracking time.
-  - 🟨 **Yellow**: Paused or bounced back to "To Do".
-  - 🟩 **Green**: Completed and archived duration.
-- **Live UI Notifications**: The native bell component tracks real-time `taskCreated` and `taskMoved` web-socket executions across user sessions, avoiding stale updates.
-- **Universal Edit Modals**: Configure task status dropdowns directly from task properties without navigating manual drag layouts.
-- **In-App Onboarding**: Native modals instructing users how to navigate the platform dynamically.
+## 🛠️ How I Built It
+- **Postgres (Auth & Workspaces)**: I used this for all the structured data like users and workspace permissions.
+- **MongoDB (Tasks & Boards)**: Since tasks change a lot and can have different fields, I used Mongo for the flexibility.
+- **Redis (Bull Queue)**: This handles all the background notification processing so the app stays fast.
+- **WebSockets**: I integrated Socket.io so that any change you make on a board shows up instantly for everyone else.
+- **Tailwind CSS**: Every part of the UI is custom-styled to be clean, responsive, and easy on the eyes.
 
 ---
 
-## 🚀 Setup & Execution
-
-### Pre-Requisites
-Execute the following Docker containers configured directly in `docker-compose.yml`:
-- **Redis** 
-- **MongoDB**
-- **Postgres** (Mapped to Port `5433` avoiding local `5432` binds)
-
-### Installation
-1. Clone the repository.
-2. Initialize and configure both `.env` configurations using the `.env.example` equivalents provided in the respective directories.
-3. Once running, **anyone can securely register an account inherently through the frontend Auth signup portal**. Open registration is entirely secure due to decoupled backend databases handling tokens natively.
+## ✨ Features That Make It Useful
+- **Automated Time Tracking**: Just drag a task into "In Progress" and I start a timer for you. Move it back or to "Done" and I'll log the exact session time.
+- **Session History**: You can see exactly when you worked on a task. Even if you pause it 10 times, I log every single session.
+- **Smart Visuals**: Cards change color based on status (Red for active, Yellow for paused, Green for done). Plus, I added a "Past Due" flag for late submissions.
+- **Live Notifications**: You'll get a real-time heads-up whenever a task is created or moved in your workspace.
 
 ---
-<p align="center">Made by Kushyanth, Copyright © 2026</p>
+
+## 🚀 Get It Running
+
+### Local Setup (Docker)
+1. Clone the repo.
+2. I've included a `docker-compose.yml` file. Just run `docker-compose up -d` to spin up Redis, Mongo, and Postgres.
+3. Set up your `.env` files in both `frontend` and `backend` (I've included `.env.example` files to show you what's needed).
+4. Run `npm install` and `npm run dev` in both folders.
+
+### Production Deployment
+If you want to put this on the web like I did, check out my [**Deployment Guide**](file:///d:/Code/Task%20flow/DEPLOYMENT_GUIDE.md). I've documented exactly how to host the backend on **Render** and the frontend on **Vercel** for free.
+
+---
+<p align="center">Built with ❤️ by Kushyanth</p>
