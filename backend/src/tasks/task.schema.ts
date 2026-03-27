@@ -52,6 +52,9 @@ export class Task extends Document {
   @Prop({ default: null })
   completedAt: Date;
 
+  @Prop({ default: [] })
+  sessionLogs: any[];
+
   @Prop({ required: true })
   boardId: string;
 

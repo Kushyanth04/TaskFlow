@@ -19,7 +19,7 @@ TaskFlow has been designed to replace static "To-Do" lists with interactive **au
 ## 🔥 Unique Interactive Features (V4)
 
 - **Interactive Time Telemetry**: Simply dragging a task from "To Do" to "In Progress" begins a live visual stopwatch.
-- **Session Pausing**: Take breaks by clicking the "Pause" button on your active task cards. It tracks Multi-Session lifecycles autonomously.
+- **Session History & Pausing**: Take breaks by clicking the "Pause" button on your active task cards. It tracks Multi-Session lifecycles autonomously, compiling explicit timestamp offsets natively mapping direct Start/End durations into the task's properties available in the Modal.
 - **Dynamic Kanban Borders**: 
   - 🟥 **Red**: Currently active and tracking time.
   - 🟨 **Yellow**: Paused or bounced back to "To Do".

@@ -11,10 +11,15 @@ export interface Task {
   workspaceId?: string;
   createdBy?: string;
   startedAt?: string;
-  timeTakenSeconds?: number;
-  isPaused?: boolean;
-  sessionCount?: number;
   completedAt?: string;
+  sessionLogs?: SessionLog[];
+}
+
+export interface SessionLog {
+  sessionNumber: number;
+  startedAt: string;
+  endedAt: string;
+  durationSeconds: number;
 }
 
 export interface Board {

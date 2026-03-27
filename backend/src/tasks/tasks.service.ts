@@ -92,12 +92,38 @@ export class TasksService {
     } else if (status === TaskStatus.DONE && existingTask.status !== TaskStatus.DONE) {
       updatePayload.completedAt = new Date();
       if (existingTask.startedAt && !existingTask.isPaused) {
-        updatePayload.timeTakenSeconds = (existingTask.timeTakenSeconds || 0) + Math.floor((new Date().getTime() - existingTask.startedAt.getTime()) / 1000);
+        const endedAt = new Date();
+        const duration = Math.floor((endedAt.getTime() - existingTask.startedAt.getTime()) / 1000);
+        updatePayload.timeTakenSeconds = (existingTask.timeTakenSeconds || 0) + duration;
+        
+        updatePayload.sessionLogs = [
+          ...(existingTask.sessionLogs || []),
+          {
+            sessionNumber: existingTask.sessionCount || 1,
+            startedAt: existingTask.startedAt,
+            endedAt: endedAt,
+            durationSeconds: duration
+          }
+        ];
+        
         updatePayload.startedAt = null;
       }
     } else if (status === TaskStatus.TODO && existingTask.status === TaskStatus.IN_PROGRESS) {
       if (existingTask.startedAt && !existingTask.isPaused) {
-        updatePayload.timeTakenSeconds = (existingTask.timeTakenSeconds || 0) + Math.floor((new Date().getTime() - existingTask.startedAt.getTime()) / 1000);
+        const endedAt = new Date();
+        const duration = Math.floor((endedAt.getTime() - existingTask.startedAt.getTime()) / 1000);
+        updatePayload.timeTakenSeconds = (existingTask.timeTakenSeconds || 0) + duration;
+        
+        updatePayload.sessionLogs = [
+          ...(existingTask.sessionLogs || []),
+          {
+            sessionNumber: existingTask.sessionCount || 1,
+            startedAt: existingTask.startedAt,
+            endedAt: endedAt,
+            durationSeconds: duration
+          }
+        ];
+        
         updatePayload.startedAt = null;
       }
       updatePayload.isPaused = false;
@@ -117,12 +143,21 @@ export class TasksService {
     if (task.isPaused) {
       task.isPaused = false;
       task.startedAt = new Date();
-      task.sessionCount = (task.sessionCount || 0) + 1;
     } else {
       task.isPaused = true;
       if (task.startedAt) {
-        const elapsed = Math.floor((new Date().getTime() - task.startedAt.getTime()) / 1000);
+        const endedAt = new Date();
+        const elapsed = Math.floor((endedAt.getTime() - task.startedAt.getTime()) / 1000);
         task.timeTakenSeconds = (task.timeTakenSeconds || 0) + elapsed;
+        
+        task.sessionLogs = task.sessionLogs || [];
+        task.sessionLogs.push({
+          sessionNumber: task.sessionCount || 1,
+          startedAt: task.startedAt,
+          endedAt: endedAt,
+          durationSeconds: elapsed
+        });
+        
         task.startedAt = null;
       }
     }

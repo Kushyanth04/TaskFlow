@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Flag, User, Trash2, Save } from 'lucide-react';
+import { X, Calendar, Flag, User, Trash2, Save, Clock } from 'lucide-react';
 import { Task } from '../types';
 
 interface TaskModalProps {
@@ -23,6 +23,16 @@ const TaskModal: React.FC<TaskModalProps> = ({
   boardId,
   workspaceId,
 }) => {
+  const formatTime = (seconds: number) => {
+    if (!seconds) return '0s';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    if (h > 0) return `${h}h ${m}m`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
+  };
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('todo');
@@ -161,6 +171,27 @@ const TaskModal: React.FC<TaskModalProps> = ({
               placeholder="Assignee name..."
             />
           </div>
+
+          {task?.sessionLogs && task.sessionLogs.length > 0 && (
+            <div className="mt-8 pt-6 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5"><Clock size={15} className="text-primary-500" /> Tracking Logs</h3>
+              <div className="space-y-2 mt-4 max-h-48 overflow-y-auto pr-1">
+                {task.sessionLogs.map((log, i) => (
+                  <div key={i} className="flex items-center justify-between text-xs bg-gray-50/80 p-3 rounded-xl border border-gray-100">
+                    <div>
+                      <span className="font-semibold text-gray-700">Session {log.sessionNumber}</span>
+                      <p className="text-gray-400 mt-1.5 flex items-center gap-1.5">
+                        <span className="bg-white px-2 py-1 rounded-md shadow-sm border border-gray-100 font-medium">{new Date(log.startedAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                        <span className="text-gray-300">→</span>
+                        <span className="bg-white px-2 py-1 rounded-md shadow-sm border border-gray-100 font-medium">{new Date(log.endedAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                      </p>
+                    </div>
+                    <span className="font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 shadow-sm">{formatTime(log.durationSeconds)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
