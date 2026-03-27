@@ -1,0 +1,41 @@
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import DashboardPage from './pages/DashboardPage';
+import BoardPage from './pages/BoardPage';
+
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return !isAuthenticated ? <>{children}</> : <Navigate to="/" replace />;
+};
+
+const AppRoutes: React.FC = () => {
+  return (
+    <Routes>
+      <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+      <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
+      <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+      <Route path="/board/:id" element={<ProtectedRoute><BoardPage /></ProtectedRoute>} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </AuthProvider>
+  );
+};
+
+export default App;
