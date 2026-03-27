@@ -84,10 +84,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
 
             {task.dueDate && (
               <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                isOverdue ? 'bg-red-50 text-red-600' : 'bg-gray-50 text-gray-500'
+                isOverdue ? 'bg-red-50 text-red-700 font-bold border border-red-200 shadow-sm' : 'bg-gray-50 text-gray-500'
               }`}>
                 <Calendar size={10} />
-                {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                {isOverdue ? 'Overdue: ' : ''}{new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
               </span>
             )}
 
@@ -127,7 +127,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
                   </span>
                   {(task.dueDate && task.completedAt && new Date(task.completedAt) > new Date(task.dueDate)) && (
                     <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 shadow-sm border border-red-200">
-                      Late Submission
+                      Past Due Submission
                     </span>
                   )}
                 </div>

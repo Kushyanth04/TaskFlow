@@ -174,7 +174,19 @@ const TaskModal: React.FC<TaskModalProps> = ({
 
           {task?.sessionLogs && task.sessionLogs.length > 0 && (
             <div className="mt-8 pt-6 border-t border-gray-100">
-              <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5"><Clock size={15} className="text-primary-500" /> Tracking Logs</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5"><Clock size={15} className="text-primary-500" /> Tracking Logs</h3>
+                {(task.status === 'done' && task.dueDate && task.completedAt && new Date(task.completedAt) > new Date(task.dueDate)) && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 shadow-sm border border-red-200">
+                    Past Due Submission
+                  </span>
+                )}
+                {(task.status !== 'done' && task.dueDate && new Date(task.dueDate) < new Date()) && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 shadow-sm border border-red-200">
+                    Currently Overdue
+                  </span>
+                )}
+              </div>
               <div className="space-y-2 mt-4 max-h-48 overflow-y-auto pr-1">
                 {task.sessionLogs.map((log, i) => (
                   <div key={i} className="flex items-center justify-between text-xs bg-gray-50/80 p-3 rounded-xl border border-gray-100">
