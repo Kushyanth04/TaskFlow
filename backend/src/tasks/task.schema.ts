@@ -37,6 +37,12 @@ export class Task extends Document {
   @Prop({ default: null })
   dueDate: Date;
 
+  @Prop({ default: null })
+  startedAt: Date;
+
+  @Prop({ default: null })
+  timeTakenSeconds: number;
+
   @Prop({ required: true })
   boardId: string;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Draggable } from '@hello-pangea/dnd';
-import { Calendar, User, Flag, GripVertical } from 'lucide-react';
+import { Calendar, User, Flag, GripVertical, Clock } from 'lucide-react';
 import { Task } from '../types';
 
 interface TaskCardProps {
@@ -14,6 +14,16 @@ const priorityConfig: Record<string, { color: string; bg: string; label: string 
   medium: { color: 'text-amber-600', bg: 'bg-amber-50', label: 'Medium' },
   high: { color: 'text-red-500', bg: 'bg-red-50', label: 'High' },
   urgent: { color: 'text-purple-600', bg: 'bg-purple-50', label: 'Urgent' },
+};
+
+const formatTime = (seconds: number) => {
+  if (!seconds) return '0s';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
 };
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
@@ -66,6 +76,20 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
               <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-50 text-gray-500">
                 <User size={10} />
                 {task.assigneeName}
+              </span>
+            )}
+
+            {task.status === 'in-progress' && task.startedAt && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100">
+                <Clock size={10} />
+                Tracking Time
+              </span>
+            )}
+
+            {task.status === 'done' && task.timeTakenSeconds !== undefined && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">
+                <Clock size={10} />
+                {formatTime(task.timeTakenSeconds)}
               </span>
             )}
           </div>

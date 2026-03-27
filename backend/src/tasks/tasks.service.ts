@@ -80,10 +80,22 @@ export class TasksService {
   }
 
   async moveTask(id: string, status: TaskStatus): Promise<Task> {
+    const existingTask = await this.taskModel.findById(id).exec();
+    if (!existingTask) throw new NotFoundException('Task not found');
+    
+    const updatePayload: any = { status };
+    
+    if (status === TaskStatus.IN_PROGRESS && existingTask.status !== TaskStatus.IN_PROGRESS) {
+      updatePayload.startedAt = new Date();
+    } else if (status === TaskStatus.DONE && existingTask.status !== TaskStatus.DONE) {
+      if (existingTask.startedAt) {
+        updatePayload.timeTakenSeconds = Math.floor((new Date().getTime() - existingTask.startedAt.getTime()) / 1000);
+      }
+    }
+
     const task = await this.taskModel
-      .findByIdAndUpdate(id, { status }, { new: true })
+      .findByIdAndUpdate(id, updatePayload, { new: true })
       .exec();
-    if (!task) throw new NotFoundException('Task not found');
     return task;
   }
 

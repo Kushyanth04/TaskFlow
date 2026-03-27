@@ -10,6 +10,8 @@ export interface Task {
   boardId?: string;
   workspaceId?: string;
   createdBy?: string;
+  startedAt?: string;
+  timeTakenSeconds?: number;
 }
 
 export interface Board {
