@@ -10,7 +10,12 @@ async function bootstrap() {
   const frontendUrl = configService.get('FRONTEND_URL', 'http://localhost:5173');
   
   app.enableCors({
-    origin: [frontendUrl, frontendUrl.replace(/\/$/, ''), 'http://localhost:5173'],
+    origin: [
+      frontendUrl, 
+      frontendUrl.replace(/\/$/, ''), 
+      'http://localhost:5173',
+      /\.vercel\.app$/ // This allows ALL vercel deployments!
+    ],
     credentials: true,
   });
 
