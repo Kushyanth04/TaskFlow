@@ -88,11 +88,19 @@ export class TasksService {
     if (status === TaskStatus.IN_PROGRESS && existingTask.status !== TaskStatus.IN_PROGRESS) {
       updatePayload.startedAt = new Date();
       updatePayload.isPaused = false;
+      updatePayload.sessionCount = (existingTask.sessionCount || 0) + 1;
     } else if (status === TaskStatus.DONE && existingTask.status !== TaskStatus.DONE) {
+      updatePayload.completedAt = new Date();
       if (existingTask.startedAt && !existingTask.isPaused) {
         updatePayload.timeTakenSeconds = (existingTask.timeTakenSeconds || 0) + Math.floor((new Date().getTime() - existingTask.startedAt.getTime()) / 1000);
         updatePayload.startedAt = null;
       }
+    } else if (status === TaskStatus.TODO && existingTask.status === TaskStatus.IN_PROGRESS) {
+      if (existingTask.startedAt && !existingTask.isPaused) {
+        updatePayload.timeTakenSeconds = (existingTask.timeTakenSeconds || 0) + Math.floor((new Date().getTime() - existingTask.startedAt.getTime()) / 1000);
+        updatePayload.startedAt = null;
+      }
+      updatePayload.isPaused = false;
     }
 
     const task = await this.taskModel
@@ -109,6 +117,7 @@ export class TasksService {
     if (task.isPaused) {
       task.isPaused = false;
       task.startedAt = new Date();
+      task.sessionCount = (task.sessionCount || 0) + 1;
     } else {
       task.isPaused = true;
       if (task.startedAt) {

@@ -40,6 +40,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
     }
   };
 
+  let borderClass = 'border-gray-100 hover:border-primary-200';
+  if (task.status === 'done') {
+    borderClass = 'border-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.3)] hover:border-emerald-500';
+  } else if (task.status === 'in-progress' && !task.isPaused) {
+    borderClass = 'border-red-400 shadow-[0_0_10px_rgba(248,113,113,0.3)] hover:border-red-500';
+  } else if ((task.status === 'in-progress' && task.isPaused) || (task.status === 'todo' && (task.sessionCount || 0) > 0)) {
+    borderClass = 'border-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.3)] hover:border-amber-500';
+  }
+
   return (
     <Draggable draggableId={task._id} index={index}>
       {(provided, snapshot) => (
@@ -50,7 +59,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
           className={`bg-white rounded-xl border p-4 mb-3 cursor-pointer group transition-smooth ${
             snapshot.isDragging
               ? 'shadow-xl border-primary-300 rotate-2 scale-105'
-              : 'border-gray-100 hover:border-primary-200 hover:shadow-md shadow-soft'
+              : `${borderClass} hover:shadow-md shadow-soft`
           }`}
         >
           <div className="flex items-start justify-between gap-2">
@@ -92,10 +101,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
             {task.status === 'in-progress' && (
               <div className="flex items-center gap-1.5">
                 <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border ${
-                  task.isPaused ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-blue-50 text-blue-600 border-blue-100'
+                  task.isPaused ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-red-50 text-red-600 border-red-100'
                 }`}>
                   <Clock size={10} />
-                  {task.isPaused ? 'Paused' : 'Tracking Time'}
+                  {task.isPaused ? `Session ${task.sessionCount || 1} Paused` : `Session ${task.sessionCount || 1} Tracking`}
                 </span>
                 <button
                   onClick={handleTogglePause}
@@ -110,10 +119,19 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
             )}
 
             {task.status === 'done' && task.timeTakenSeconds !== undefined && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">
-                <Clock size={10} />
-                {formatTime(task.timeTakenSeconds)}
-              </span>
+              <div className="flex flex-col gap-1 w-full mt-1.5 border-t border-gray-100 pt-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm">
+                    <Clock size={10} />
+                    {task.sessionCount || 1} {(task.sessionCount || 1) === 1 ? 'Session' : 'Sessions'} | Total: {formatTime(task.timeTakenSeconds)}
+                  </span>
+                  {(task.dueDate && task.completedAt && new Date(task.completedAt) > new Date(task.dueDate)) && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 shadow-sm border border-red-200">
+                      Late Submission
+                    </span>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </div>

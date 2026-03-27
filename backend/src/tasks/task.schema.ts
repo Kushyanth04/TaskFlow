@@ -46,6 +46,12 @@ export class Task extends Document {
   @Prop({ default: false })
   isPaused: boolean;
 
+  @Prop({ default: 0 })
+  sessionCount: number;
+
+  @Prop({ default: null })
+  completedAt: Date;
+
   @Prop({ required: true })
   boardId: string;
 

@@ -151,7 +151,7 @@ const BoardPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="flex-1 bg-gray-50 flex flex-col w-full h-full">
       <header className="bg-white border-b border-gray-100 shadow-soft sticky top-0 z-30">
         <div className="max-w-full mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">

@@ -12,11 +12,12 @@ interface Notification {
 
 const NotificationBell: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: 'welcome-1',
       type: 'assignment',
-      message: 'Welcome aboard! Check the README on GitHub to learn how to operate TaskFlow.',
+      message: 'Welcome aboard! Click here to learn how to operate TaskFlow.',
       time: new Date(),
       read: false,
     }
@@ -119,9 +120,15 @@ const NotificationBell: React.FC = () => {
                 notifications.map((n) => (
                   <div
                     key={n.id}
-                    className={`px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-smooth flex gap-3 ${
+                    className={`px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-smooth flex gap-3 cursor-pointer ${
                       n.read ? 'opacity-60' : ''
                     }`}
+                    onClick={() => {
+                      if (n.id.startsWith('welcome')) setShowWelcomeModal(true);
+                      if (!n.read) {
+                        setNotifications(prev => prev.map(x => x.id === n.id ? { ...x, read: true } : x));
+                      }
+                    }}
                   >
                     <div className="mt-0.5">{getIcon(n.type)}</div>
                     <div className="flex-1 min-w-0">
@@ -137,6 +144,34 @@ const NotificationBell: React.FC = () => {
             </div>
           </div>
         </>
+      )}
+
+      {showWelcomeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowWelcomeModal(false)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 animate-scaleIn border border-gray-100">
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><CheckCircle className="text-primary-500" /> Welcome to TaskFlow! 🚀</h2>
+            <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
+              <p>TaskFlow is your real-time project management hub. Here is how to operate your new workspace:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Create Workspaces:</strong> Start by constructing a workspace for your team.</li>
+                <li><strong>Build Boards:</strong> Add Kanban boards to your workspace to organize different features.</li>
+                <li><strong>Track Time:</strong> Create tasks in the <strong>To Do</strong> column. Drag them to <strong>In Progress</strong> to automatically start tracking time!</li>
+                <li><strong>Pause & Resume:</strong> Click the <span className="inline-flex items-center text-amber-600 font-medium px-1">Pause</span> button on an In Progress card to take a break. We track your sessions dynamically!</li>
+                <li><strong>Finish & Save:</strong> Drop it into <strong>Done</strong> or select the status from the Edit Modal to permanently save your tracking telemetry.</li>
+              </ul>
+              <div className="mt-4 p-4 bg-gray-50 border border-gray-100 rounded-xl">
+                <p className="font-medium text-gray-800 text-xs mb-1">Architecture Note:</p>
+                <p className="text-xs text-gray-500">
+                  Data is securely stored in <strong>MongoDB</strong> (Tasks) and <strong>PostgreSQL</strong> (Users). Open registration is currently available, anyone can sign up safely when deployed.
+                </p>
+              </div>
+            </div>
+            <button onClick={() => setShowWelcomeModal(false)} className="mt-6 w-full py-2.5 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-smooth font-medium shadow-md shadow-primary-500/20">
+              Get Started
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

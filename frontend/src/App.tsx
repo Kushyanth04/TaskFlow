@@ -32,8 +32,8 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="flex flex-col min-h-screen">
-          <main className="flex-1">
+        <div className="flex flex-col min-h-screen w-full">
+          <main className="flex-1 flex flex-col w-full">
             <AppRoutes />
           </main>
           <footer className="py-4 text-center text-sm text-gray-400 border-t border-gray-100 bg-white">
