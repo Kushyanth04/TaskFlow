@@ -9,6 +9,7 @@ import { WorkspacesModule } from './workspaces/workspaces.module';
 import { BoardsModule } from './boards/boards.module';
 import { TasksModule } from './tasks/tasks.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -60,5 +61,6 @@ import { NotificationsModule } from './notifications/notifications.module';
     TasksModule,
     NotificationsModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
