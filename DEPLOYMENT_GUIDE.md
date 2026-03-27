@@ -48,6 +48,7 @@ TaskFlow uses real-time WebSockets and Redis queues, which means the backend mus
    - `REDIS_PORT` = *(Your Upstash Port)*
    - `REDIS_PASSWORD` = *(Your Upstash Password)*
    - `REDIS_TLS` = `true`
+   - `FRONTEND_URL` = *(Your Vercel Deployment URL, e.g. `https://task-flow.vercel.app`)*
    - `JWT_SECRET` = *(Generate any random string for cookie/token encryptions)*
 5. Click **Deploy**! Render will spin up the environment and hand you an active URL like `https://taskflow-api.onrender.com`.
 
