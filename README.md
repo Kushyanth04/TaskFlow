@@ -34,10 +34,3 @@ I built this using a modern stack: **NestJS, React, TypeScript, MongoDB, and Pos
 ### Production Deployment
 If you want to put this on the web like I did, check out my [**Deployment Guide**](file:///d:/Code/Task%20flow/DEPLOYMENT_GUIDE.md). I've documented exactly how to host the backend on **Render** and the frontend on **Vercel** for free.
 
----
-<p align="center">
-  Built with ❤️ by Kushyanth <br/>
-  <a href="https://www.linkedin.com/in/bkushyanth/">
-    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
-  </a>
-</p>
