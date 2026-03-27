@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Linkedin } from 'lucide-react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -36,8 +37,19 @@ const App: React.FC = () => {
           <main className="flex-1 flex flex-col w-full">
             <AppRoutes />
           </main>
-          <footer className="py-4 text-center text-sm text-gray-400 border-t border-gray-100 bg-white">
-            Made by Kushyanth, Copyright &copy; 2026
+          <footer className="py-6 text-center text-sm text-gray-400 border-t border-gray-100 bg-white flex flex-col items-center gap-3">
+            <div className="flex items-center gap-4">
+              <a 
+                href="https://www.linkedin.com/in/kushyanth-b-498260214/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 rounded-full bg-gray-50 text-gray-400 hover:text-[#0077B5] hover:bg-[#0077B5]/10 transition-smooth"
+                title="LinkedIn Profile"
+              >
+                <Linkedin size={18} />
+              </a>
+            </div>
+            <p>Made by Kushyanth, Copyright &copy; 2026</p>
           </footer>
         </div>
       </BrowserRouter>

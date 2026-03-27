@@ -11,6 +11,9 @@ export interface Task {
   workspaceId?: string;
   createdBy?: string;
   startedAt?: string;
+  timeTakenSeconds?: number;
+  isPaused?: boolean;
+  sessionCount?: number;
   completedAt?: string;
   sessionLogs?: SessionLog[];
 }
