@@ -13,6 +13,14 @@
 
 ---
 
+## Hello! This is my project, TaskFlow.
+
+I built TaskFlow as a full-stack, real-time project management platform designed to help teams collaborate seamlessly. My goal was to create a robust and scalable architecture that handles complex data relationships securely while offering an incredibly fast and reactive user experience.
+
+To achieve this, I used **NestJS and TypeScript** on the backend, combining **MongoDB** for flexible task storage with **PostgreSQL** for strict user management and role-based access control (RBAC). I implemented **Socket.io** to power live, WebSocket-driven updates across team workspaces so that any change made by one user instantly reflects for everyone else. Additionally, I integrated a **Bull queue** (backed by Redis) to manage asynchronous jobs like task assignments, due date reminders, and overdue escalations. 
+
+On the front end, I built a clean, drag-and-drop React interface utilizing Tailwind CSS to make managing tasks as intuitive as possible. Finally, I containerized the entire application using Docker and set up a GitHub Actions CI/CD pipeline to automate my deployments to AWS (and Vercel for the frontend).
+
 ## Architecture
 
 ```
@@ -56,12 +64,12 @@
 | Deployment | Docker, docker-compose, GitHub Actions CI/CD         |
 | DnD        | @hello-pangea/dnd (react-beautiful-dnd fork)         |
 
-## Features
+## What I Implemented (Features)
 
 - **JWT Authentication** with role-based access control (admin, member, viewer)
 - **Dual Database** architecture — PostgreSQL for relational data, MongoDB for documents
 - **Kanban Board** with drag-and-drop between columns (To Do, In Progress, Done)
-- **Real-time Updates** via WebSocket — see other users' changes live
+- **Real-time Updates** via WebSocket — you can see other users' changes live!
 - **Bull Queue** for async notifications:
   - Task assignment notifications
   - Due date reminders (24hr before)
@@ -69,7 +77,9 @@
 - **Workspace** management with team members
 - **Task Filtering** by assignee, status, and priority
 
-## Quick Start
+## How to Run My App Locally
+
+If you'd like to test my app on your own machine, follow these steps:
 
 ### Prerequisites
 
@@ -79,30 +89,20 @@
 ### 1. Clone & Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/taskflow.git
-cd taskflow
+git clone https://github.com/Kushyanth04/TaskFlow.git
+cd TaskFlow
 cp backend/.env.example backend/.env
 ```
 
 ### 2. Start with Docker
 
 ```bash
-docker-compose up -d
+docker-compose up -d postgres mongo redis
 ```
 
-This starts PostgreSQL, MongoDB, Redis, and the backend.
+This starts the PostgreSQL, MongoDB, and Redis databases. *(Note: PostgreSQL is mapped to port 5433 to avoid local conflicts).*
 
-### 3. Run Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open **http://localhost:5173**
-
-### 4. Run Backend (Development)
+### 3. Run the Backend (Development)
 
 ```bash
 cd backend
@@ -110,109 +110,72 @@ npm install
 npm run start:dev
 ```
 
-API runs on **http://localhost:3001**
+My API will run on **http://localhost:3001**
+
+### 4. Run the Frontend 
+
+In a new terminal:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open **http://localhost:5173** in your browser to see the app in action!
 
 ---
 
 ## API Documentation
 
 ### Authentication
-
-| Method | Endpoint          | Description    | Auth |
-|--------|-------------------|----------------|------|
-| POST   | `/api/auth/signup` | Register user  | No   |
-| POST   | `/api/auth/login`  | Login user     | No   |
+- `POST /api/auth/signup` - Register a new user
+- `POST /api/auth/login` - Login to receive a JWT
 
 ### Workspaces
-
-| Method | Endpoint                       | Description         | Auth |
-|--------|--------------------------------|---------------------|------|
-| GET    | `/api/workspaces`              | List user workspaces| JWT  |
-| POST   | `/api/workspaces`              | Create workspace    | JWT  |
-| GET    | `/api/workspaces/:id`          | Get workspace       | JWT  |
-| PUT    | `/api/workspaces/:id`          | Update workspace    | JWT  |
-| DELETE | `/api/workspaces/:id`          | Delete workspace    | JWT  |
-| POST   | `/api/workspaces/:id/members`  | Add member          | JWT  |
+- `GET /api/workspaces` - List current user workspaces
+- `POST /api/workspaces` - Create a new workspace
+- `GET /api/workspaces/:id` - Get details of a specific workspace
+- `PUT /api/workspaces/:id` - Update workspace details
+- `DELETE /api/workspaces/:id` - Delete a workspace
 
 ### Boards
-
-| Method | Endpoint                | Description          | Auth |
-|--------|-------------------------|----------------------|------|
-| GET    | `/api/boards?workspaceId=` | List boards         | JWT  |
-| POST   | `/api/boards`           | Create board          | JWT  |
-| GET    | `/api/boards/:id`       | Get board             | JWT  |
-| PUT    | `/api/boards/:id`       | Update board          | JWT  |
-| DELETE | `/api/boards/:id`       | Delete board          | JWT  |
+- `GET /api/boards?workspaceId=` - List all boards in a workspace
+- `POST /api/boards` - Create a new Kanban board
+- `GET /api/boards/:id` - View a board
+- `PUT /api/boards/:id` - Edit a board
+- `DELETE /api/boards/:id` - Delete a board
 
 ### Tasks
-
-| Method | Endpoint                        | Description          | Auth |
-|--------|---------------------------------|----------------------|------|
-| GET    | `/api/tasks?boardId=&status=&priority=&assignee=` | List/filter tasks | JWT |
-| POST   | `/api/tasks`                    | Create task          | JWT  |
-| GET    | `/api/tasks/:id`                | Get task             | JWT  |
-| PUT    | `/api/tasks/:id`                | Update task          | JWT  |
-| PATCH  | `/api/tasks/:id/move`           | Move task (status)   | JWT  |
-| DELETE | `/api/tasks/:id`                | Delete task          | JWT  |
+- `GET /api/tasks?boardId=&status=` - List or filter tasks
+- `POST /api/tasks` - Create a new task
+- `GET /api/tasks/:id` - View task details
+- `PUT /api/tasks/:id` - Edit task text/assignments
+- `PATCH /api/tasks/:id/move` - Move task between Kanban columns
+- `DELETE /api/tasks/:id` - Delete a task
 
 ---
 
 ## WebSocket Events
 
-Connect to `/ws` namespace with Socket.io.
+My app connects to the `/ws` namespace with Socket.io for live updates.
 
 ### Client → Server
-
-| Event            | Payload        | Description              |
-|------------------|----------------|--------------------------|
-| `joinWorkspace`  | `workspaceId`  | Subscribe to workspace   |
-| `leaveWorkspace` | `workspaceId`  | Unsubscribe              |
+- `joinWorkspace` (payload: `workspaceId`) - Subscribe to workspace events
+- `leaveWorkspace` (payload: `workspaceId`) - Unsubscribe
 
 ### Server → Client
-
-| Event          | Payload     | Description           |
-|----------------|-------------|-----------------------|
-| `taskCreated`  | `Task`      | New task created      |
-| `taskUpdated`  | `Task`      | Task details changed  |
-| `taskMoved`    | `Task`      | Task moved columns    |
-| `taskDeleted`  | `taskId`    | Task removed          |
-| `notification` | `Notification` | Push notification  |
+- `taskCreated` - Broadcasts when a new task is created
+- `taskUpdated` - Broadcasts when a task's details change
+- `taskMoved` - Broadcasts when a task is moved to a new column
+- `taskDeleted` - Broadcasts when a task is removed
 
 ---
 
-## Project Structure
+## Deployment Strategy
 
-```
-taskflow/
-├── backend/
-│   ├── src/
-│   │   ├── auth/           # JWT authentication
-│   │   ├── users/          # User entity (PostgreSQL)
-│   │   ├── workspaces/     # Workspace management
-│   │   ├── boards/         # Board schema (MongoDB)
-│   │   ├── tasks/          # Tasks + WebSocket gateway
-│   │   ├── notifications/  # Bull queue processor
-│   │   └── common/         # Guards & decorators
-│   ├── Dockerfile
-│   └── package.json
-├── frontend/
-│   ├── src/
-│   │   ├── components/     # KanbanBoard, TaskCard, TaskModal
-│   │   ├── pages/          # Login, Signup, Dashboard, Board
-│   │   ├── hooks/          # useSocket
-│   │   ├── services/       # API client, Socket.io
-│   │   └── context/        # AuthContext
-│   └── package.json
-├── docker-compose.yml
-├── .github/workflows/ci.yml
-└── README.md
-```
-
-## Deployment
-
-- **Backend**: Deploy via Docker to Render / Railway / AWS ECS
-- **Frontend**: Deploy to Vercel (`npm run build` → static files)
-- **Databases**: Use managed services (MongoDB Atlas, Supabase/Neon for PostgreSQL, Upstash for Redis)
+- **Backend**: Containerized via Docker, deployed to Render/AWS.
+- **Frontend**: Deployed to Vercel connected to the GitHub repo.
+- **Databases**: Supabase/Neon for PostgreSQL, MongoDB Atlas for the document store, and Upstash for Redis.
 
 ## License
 
