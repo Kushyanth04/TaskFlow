@@ -47,6 +47,8 @@ import { NotificationsModule } from './notifications/notifications.module';
         redis: {
           host: config.get('REDIS_HOST', 'localhost'),
           port: config.get<number>('REDIS_PORT', 6379),
+          password: config.get('REDIS_PASSWORD'),
+          tls: config.get('REDIS_TLS') === 'true' ? {} : undefined,
         },
       }),
     }),
