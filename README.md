@@ -37,7 +37,7 @@ If you want to put this on the web like I did, check out my [**Deployment Guide*
 ---
 <p align="center">
   Built with ❤️ by Kushyanth <br/>
-  <a href="https://www.linkedin.com/in/kushyanth-b-498260214/">
+  <a href="https://www.linkedin.com/in/kushyanthb/">
     <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
   </a>
 </p>
