@@ -66,6 +66,7 @@ export const tasksAPI = {
   update: (id: string, data: any) => api.put(`/tasks/${id}`, data),
   move: (id: string, status: string) =>
     api.patch(`/tasks/${id}/move`, { status }),
+  togglePause: (id: string) => api.patch(`/tasks/${id}/pause`),
   delete: (id: string) => api.delete(`/tasks/${id}`),
 };
 

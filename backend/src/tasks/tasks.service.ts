@@ -87,9 +87,11 @@ export class TasksService {
     
     if (status === TaskStatus.IN_PROGRESS && existingTask.status !== TaskStatus.IN_PROGRESS) {
       updatePayload.startedAt = new Date();
+      updatePayload.isPaused = false;
     } else if (status === TaskStatus.DONE && existingTask.status !== TaskStatus.DONE) {
-      if (existingTask.startedAt) {
-        updatePayload.timeTakenSeconds = Math.floor((new Date().getTime() - existingTask.startedAt.getTime()) / 1000);
+      if (existingTask.startedAt && !existingTask.isPaused) {
+        updatePayload.timeTakenSeconds = (existingTask.timeTakenSeconds || 0) + Math.floor((new Date().getTime() - existingTask.startedAt.getTime()) / 1000);
+        updatePayload.startedAt = null;
       }
     }
 
@@ -97,6 +99,25 @@ export class TasksService {
       .findByIdAndUpdate(id, updatePayload, { new: true })
       .exec();
     return task;
+  }
+
+  async togglePause(id: string): Promise<Task> {
+    const task = await this.taskModel.findById(id).exec();
+    if (!task) throw new NotFoundException('Task not found');
+    if (task.status !== TaskStatus.IN_PROGRESS) return task;
+
+    if (task.isPaused) {
+      task.isPaused = false;
+      task.startedAt = new Date();
+    } else {
+      task.isPaused = true;
+      if (task.startedAt) {
+        const elapsed = Math.floor((new Date().getTime() - task.startedAt.getTime()) / 1000);
+        task.timeTakenSeconds = (task.timeTakenSeconds || 0) + elapsed;
+        task.startedAt = null;
+      }
+    }
+    return task.save();
   }
 
   async delete(id: string): Promise<void> {

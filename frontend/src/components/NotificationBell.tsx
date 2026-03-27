@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bell, X, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { getSocket } from '../services/socket';
 
 interface Notification {
   id: string;
@@ -13,27 +14,46 @@ const NotificationBell: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([
     {
-      id: '1',
+      id: 'welcome-1',
       type: 'assignment',
-      message: 'You were assigned to "Design System Audit"',
+      message: 'Welcome aboard! Check the README on GitHub to learn how to operate TaskFlow.',
       time: new Date(),
       read: false,
-    },
-    {
-      id: '2',
-      type: 'reminder',
-      message: '"API Integration" is due in 24 hours',
-      time: new Date(Date.now() - 3600000),
-      read: false,
-    },
-    {
-      id: '3',
-      type: 'overdue',
-      message: '"Database Migration" is overdue',
-      time: new Date(Date.now() - 7200000),
-      read: true,
-    },
+    }
   ]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    if (!socket) return;
+
+    const handleTaskCreated = (task: any) => {
+      setNotifications(prev => [{
+        id: Date.now().toString() + Math.random(),
+        type: 'assignment',
+        message: `A new task "${task.title}" was created.`,
+        time: new Date(),
+        read: false,
+      }, ...prev]);
+    };
+
+    const handleTaskMoved = (task: any) => {
+      setNotifications(prev => [{
+        id: Date.now().toString() + Math.random(),
+        type: 'reminder',
+        message: `Task "${task.title}" was moved to ${task.status}.`,
+        time: new Date(),
+        read: false,
+      }, ...prev]);
+    };
+
+    socket.on('taskCreated', handleTaskCreated);
+    socket.on('taskMoved', handleTaskMoved);
+
+    return () => {
+      socket.off('taskCreated', handleTaskCreated);
+      socket.off('taskMoved', handleTaskMoved);
+    };
+  }, []);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 

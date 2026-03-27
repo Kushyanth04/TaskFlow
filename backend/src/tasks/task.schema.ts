@@ -43,6 +43,9 @@ export class Task extends Document {
   @Prop({ default: null })
   timeTakenSeconds: number;
 
+  @Prop({ default: false })
+  isPaused: boolean;
+
   @Prop({ required: true })
   boardId: string;
 

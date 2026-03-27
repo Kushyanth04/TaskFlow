@@ -1,6 +1,7 @@
 import React from 'react';
 import { Draggable } from '@hello-pangea/dnd';
-import { Calendar, User, Flag, GripVertical, Clock } from 'lucide-react';
+import { Calendar, User, Flag, GripVertical, Clock, Pause, Play } from 'lucide-react';
+import { tasksAPI } from '../services/api';
 import { Task } from '../types';
 
 interface TaskCardProps {
@@ -30,6 +31,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
   const priority = priorityConfig[task.priority] || priorityConfig.medium;
   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'done';
 
+  const handleTogglePause = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await tasksAPI.togglePause(task._id);
+    } catch (error) {
+      console.error('Failed to toggle pause', error);
+    }
+  };
+
   return (
     <Draggable draggableId={task._id} index={index}>
       {(provided, snapshot) => (
@@ -47,7 +57,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
             <h4 className="text-sm font-medium text-gray-900 leading-snug flex-1">{task.title}</h4>
             <div
               {...provided.dragHandleProps}
-              className="opacity-0 group-hover:opacity-100 transition-smooth p-0.5 text-gray-300 hover:text-gray-500"
+              className="p-0.5 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing transition-smooth"
             >
               <GripVertical size={14} />
             </div>
@@ -79,11 +89,24 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onClick }) => {
               </span>
             )}
 
-            {task.status === 'in-progress' && task.startedAt && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100">
-                <Clock size={10} />
-                Tracking Time
-              </span>
+            {task.status === 'in-progress' && (
+              <div className="flex items-center gap-1.5">
+                <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border ${
+                  task.isPaused ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-blue-50 text-blue-600 border-blue-100'
+                }`}>
+                  <Clock size={10} />
+                  {task.isPaused ? 'Paused' : 'Tracking Time'}
+                </span>
+                <button
+                  onClick={handleTogglePause}
+                  className={`p-1 rounded hover:bg-gray-100 transition-smooth ${
+                    task.isPaused ? 'text-emerald-600' : 'text-amber-600'
+                  }`}
+                  title={task.isPaused ? "Resume" : "Pause"}
+                >
+                  {task.isPaused ? <Play size={12} /> : <Pause size={12} />}
+                </button>
+              </div>
             )}
 
             {task.status === 'done' && task.timeTakenSeconds !== undefined && (

@@ -12,6 +12,7 @@ export interface Task {
   createdBy?: string;
   startedAt?: string;
   timeTakenSeconds?: number;
+  isPaused?: boolean;
 }
 
 export interface Board {

@@ -105,6 +105,13 @@ export class TasksController {
     return task;
   }
 
+  @Patch(':id/pause')
+  async togglePause(@Param('id') id: string) {
+    const task = await this.tasksService.togglePause(id);
+    this.tasksGateway.emitTaskUpdated(task.workspaceId, task);
+    return task;
+  }
+
   @Delete(':id')
   async delete(@Param('id') id: string) {
     const task = await this.tasksService.findById(id);
