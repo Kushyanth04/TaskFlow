@@ -40,7 +40,7 @@ const App: React.FC = () => {
           <footer className="py-6 text-center text-sm text-gray-400 border-t border-gray-100 bg-white flex flex-col items-center gap-3">
             <div className="flex items-center gap-4">
               <a 
-                href="https://www.linkedin.com/in/kushyanth-b-498260214/" 
+                href="https://www.linkedin.com/in/bkushyanth/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-gray-50 text-gray-400 hover:text-[#0077B5] hover:bg-[#0077B5]/10 transition-smooth"
