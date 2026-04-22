@@ -1,3 +1,6 @@
+<img width="996" height="1002" alt="image" src="https://github.com/user-attachments/assets/96cfc881-27b0-4181-8243-8220c2c947a9" />
+
+
 # TaskFlow 🚀
 
 Hey! This is **TaskFlow**, a project management tool I built to make tracking work actually feel intuitive. Unlike basic to-do apps, this one handles real-time updates and tracks exactly how long you spend on every task through automated sub-sessions.
